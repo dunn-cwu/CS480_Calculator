@@ -1,3 +1,17 @@
+// ---------------------------------
+// Course: CS 480 Advanced Software Engineering
+// Section: 8:00 AM
+// Instructor: Dr. Szilárd VAJDA
+// Quarter: Fall 2018
+// Date: 10/27/2018
+//
+// Assignment: Lab 3
+// Student: Andrew Dunn
+//
+// File: mainwindow.h
+// Desc: Header file and definition for MainWindow class.
+// ---------------------------------
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -66,3 +80,7 @@ private:
 };
 
 #endif // MAINWINDOW_H
+
+// ===================================================
+// End Of File
+// ===================================================
