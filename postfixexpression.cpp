@@ -69,6 +69,13 @@ bool PostfixExpression::fromInfix(QString infixExpr)
 
     QString newExp = "";
     std::stack<QChar> expStack;
+    const QChar STACK_BASE = 'B';
+
+    // Push char to keep track of the base of the stack
+    // This is to avoid some issues I ran into when the
+    // stack becomes empty
+    expStack.push(STACK_BASE);
+
     const int expLen = infixExpr.length();
 
     for (int i = 0; i < expLen; i++)
@@ -101,15 +108,13 @@ bool PostfixExpression::fromInfix(QString infixExpr)
             expStack.push('('); }
         else if (curCh == ')')
         {
-            if (expStack.empty()) return false;
-
-            while (!expStack.empty() && expStack.top() != '(')
+            while (expStack.top() != STACK_BASE && expStack.top() != '(')
             {
                 newExp.append(expStack.top());
                 expStack.pop();
             }
 
-            if (!expStack.empty() && expStack.top() != '(') {
+            if (expStack.top() != '(') {
                 return false; }
             else {
                 expStack.pop();
@@ -117,7 +122,7 @@ bool PostfixExpression::fromInfix(QString infixExpr)
         }
         else
         {
-            while (!expStack.empty() && opPrecedence(curCh) <= opPrecedence(expStack.top()))
+            while (expStack.top() != STACK_BASE && opPrecedence(curCh) <= opPrecedence(expStack.top()))
             {
                 newExp.append(expStack.top());
                 expStack.pop();
@@ -127,7 +132,7 @@ bool PostfixExpression::fromInfix(QString infixExpr)
         }
     }
 
-    while (!expStack.empty())
+    while (expStack.top() != STACK_BASE)
     {
         newExp.append(expStack.top());
         expStack.pop();
@@ -147,6 +152,7 @@ bool PostfixExpression::solve(double& out)
     }
 
     std::stack<double> operandStack;
+
     const int expLen = expr.length();
 
     for (int i = 0; i < expLen; i++)
