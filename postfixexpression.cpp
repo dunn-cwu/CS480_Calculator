@@ -15,7 +15,7 @@
 // ---------------------------------
 
 #include <stack>
-#include <tgmath.h>
+#include <math.h>
 #include "postfixexpression.h"
 
 PostfixExpression::PostfixExpression() : expr("")
