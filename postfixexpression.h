@@ -31,7 +31,7 @@ private:
 
     int opPrecedence(QChar op);
     bool isOperand(QChar op);
-    QString fixNegations(QString infixExpr);
+    QString fixNegationsAndMult(QString infixExpr);
 };
 
 #endif // POSTFIXEXPRESSION_H
