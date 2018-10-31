@@ -29,7 +29,10 @@ PostfixExpression::PostfixExpression(QString expr) : expr(expr)
 // Fixes unary negations in the infix expression
 // to work correctly in the postfix expression solving.
 // Ex: -2 is converted to (0-2)
-QString PostfixExpression::fixNegations(QString infixExpr)
+//
+// Fixes parentheses multiplication to work correctly.
+// Ex: 2(3+4) is converted to 2*(3+4)
+QString PostfixExpression::fixNegationsAndMult(QString infixExpr)
 {
     if (infixExpr.isEmpty()) return infixExpr;
 
@@ -83,6 +86,34 @@ QString PostfixExpression::fixNegations(QString infixExpr)
                 }
             }
         }
+        else if (curCh == '(' && i > 0)
+        {
+            // Do we have an operand and then a parentheses?
+            QChar prevChar = infixExpr.at(i - 1);
+
+            if (isOperand(prevChar))
+            {
+                // Insert multiplication before parentheses
+                infixExpr.insert(i, '*');
+                i++;
+            }
+        }
+        else if (curCh == ')' && isOperand(nextChar))
+        {
+
+            // Do we have a parentheses and then an operand?
+            // Insert multiplication after parentheses
+            infixExpr.insert(i + 1, '*');
+            i++;
+
+        }
+        else if (curCh == ')' && nextChar == '(')
+        {
+            // Do we have two different opposite parentheses next to each other?
+            // Insert multiplication in between them
+            infixExpr.insert(i + 1, '*');
+            i++;
+        }
 
         // Update expLen with new string length
         expLen = infixExpr.length();
@@ -104,8 +135,8 @@ bool PostfixExpression::fromInfix(QString infixExpr)
         return true;
     }
 
-    // Fix unary negations
-    infixExpr = fixNegations(infixExpr);
+    // Fix unary negations and parentheses multiplication
+    infixExpr = fixNegationsAndMult(infixExpr);
 
     QString newExp = "";
     std::stack<QChar> expStack;
